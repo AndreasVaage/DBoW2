@@ -87,4 +87,8 @@ typedef DBoW2::TemplatedDatabase<DBoW2::FSurf64::TDescriptor, DBoW2::FSurf64>
 typedef DBoW2::TemplatedVocabulary<DBoW2::FCNN::TDescriptor, DBoW2::FCNN>
   CNNVocabulary;
 
+/// CNN-feature Database
+typedef DBoW2::TemplatedDatabase<DBoW2::FCNN::TDescriptor, DBoW2::FCNN> 
+  CNNDatabase;
+
 #endif

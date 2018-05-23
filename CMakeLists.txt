@@ -3,9 +3,10 @@ project(DBoW2)
 include(ExternalProject)
 
 option(BUILD_DBoW2   "Build DBoW2"             ON)
-option(BUILD_Demo    "Build demo application"  ON)
+option(BUILD_Demo    "Build demo application"  OFF)
 option(BUILD_SURF    "Build SURF vocabulary"   OFF)
-option(BUILD_CNN     "Build CNN vocabulary"    ON)
+option(BUILD_CNN     "Build CNN vocabulary"    OFF)
+option(BUILD_VocTest "Build vocabulary tester" ON)
 
 
 # Check C++11 or C++0x support
@@ -85,7 +86,7 @@ else(${DLib_FOUND})
   endif(${DOWNLOAD_DLib_dependency})
 endif(${DLib_FOUND})
 
-set(DYLD_FALLBACK_LIBRARY_PATH ${DEPENDENCY_INSTALL_DIR}/lib)
+
 
 if(BUILD_DBoW2)
   add_library(${PROJECT_NAME} SHARED ${SRCS})
@@ -110,6 +111,11 @@ if(BUILD_CNN)
   target_link_libraries(createCNNvoc ${PROJECT_NAME} ${OpenCV_LIBS} ${DLib_LIBS})
 endif(BUILD_CNN)
 
+if(BUILD_VocTest)
+  add_executable(testVoc demo/testVoc.cpp)
+  target_link_libraries(testVoc ${PROJECT_NAME} ${OpenCV_LIBS} ${DLib_LIBS})
+endif(BUILD_VocTest)
+
 configure_file(src/DBoW2.cmake.in
   "${PROJECT_BINARY_DIR}/DBoW2Config.cmake" @ONLY)
 
@@ -122,3 +128,9 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/DBoW2Config.cmake"
 install(FILES "${PROJECT_BINARY_DIR}/DBoW2Config.cmake" 
   DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/cmake/DBoW2/)
 install(DIRECTORY ${DEPENDENCY_INSTALL_DIR}/ DESTINATION ${CMAKE_INSTALL_PREFIX} OPTIONAL)
+
+# set @rpaths for libraries to link against
+#SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
+#SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE) 
+#SET(CMAKE_INSTALL_RPATH "${PROJ_LIB_DIR}")
+#SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
