@@ -6,6 +6,8 @@
 #include <fstream> 
 #include <iostream>
 #include <vector>
+#include <sstream>
+#include <iomanip>
 
 // DBoW2
 #include "DBoW2.h" // defines OrbVocabulary and OrbDatabase
@@ -43,7 +45,10 @@ void testDatabase(Tdb &db, const vector<vector<TDescriptor > > &features, string
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 // number of training images
-int NIMAGES = 3682;
+//int NIMAGES = 3682; //MH01
+//int NIMAGES = 4541; //KITTI 00
+int NIMAGES = 2761;   //KITTI 05
+int MATCHING_IMAGE =  70;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
@@ -205,8 +210,9 @@ void loadOrbFeatures(vector<vector<FORB::TDescriptor > > &features, const string
   for(int i = 0; i < NIMAGES; ++i)
   {
     stringstream ss;
-    ss << imagePath << "/image" << i << ".png";
-
+    //ss << imagePath << "/image" << i << ".png"; MH01
+    //ss << imagePath << "/00" << i << ".png";
+    ss << imagePath << "/" << std::setw(6) << std::setfill('0') << i << ".png";
     cv::Mat image = cv::imread(ss.str(), 0);
     cv::Mat mask;
     vector<cv::KeyPoint> keypoints;
@@ -299,7 +305,7 @@ void testDatabase(Tdb &db, const vector<vector<TDescriptor > > &features, string
   }
   else 
   {
-    db.query(features[0], ret, NIMAGES);
+    db.query(features[MATCHING_IMAGE], ret, NIMAGES);
     ofstream file(outputName + ".dat");
     file << "#x y" << endl;
     QueryResults::const_iterator rit;
