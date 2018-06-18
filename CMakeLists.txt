@@ -7,6 +7,7 @@ option(BUILD_Demo    "Build demo application"  OFF)
 option(BUILD_SURF    "Build SURF vocabulary"   OFF)
 option(BUILD_CNN     "Build CNN vocabulary"    OFF)
 option(BUILD_VocTest "Build vocabulary tester" ON)
+option(BUILD_calDist "Build gt distance calc"  ON)
 
 
 # Check C++11 or C++0x support
@@ -47,11 +48,12 @@ set(HDRS
   include/DBoW2/FORB.h                include/DBoW2/DBoW2.h               
   include/DBoW2/FClass.h              include/DBoW2/FeatureVector.h
   include/DBoW2/ScoringObject.h       include/DBoW2/TemplatedVocabulary_ORB_SLAM.h  
-  include/DBoW2/FCNN.h                include/DBoW2/FSurf64.h)
+  include/DBoW2/FCNN.h                include/DBoW2/FSurf64.h
+  include/DBoW2/matrix.h)
 set(SRCS 
   src/BowVector.cpp     src/FBrief.cpp        src/FORB.cpp
   src/FeatureVector.cpp src/QueryResults.cpp  src/ScoringObject.cpp
-  src/FCNN.cpp          src/FSurf64.cpp)
+  src/FCNN.cpp          src/FSurf64.cpp       src/matrix.cpp)
 
 set(DEPENDENCY_DIR ${CMAKE_CURRENT_BINARY_DIR}/dependencies)
 set(DEPENDENCY_INSTALL_DIR ${DEPENDENCY_DIR}/install)
@@ -115,6 +117,11 @@ if(BUILD_VocTest)
   add_executable(testVoc demo/testVoc.cpp)
   target_link_libraries(testVoc ${PROJECT_NAME} ${OpenCV_LIBS} ${DLib_LIBS})
 endif(BUILD_VocTest)
+
+if(BUILD_calDist)
+  add_executable(computeDistance demo/computeDistance.cpp)
+  target_link_libraries(computeDistance ${PROJECT_NAME} ${OpenCV_LIBS} ${DLib_LIBS})
+endif(BUILD_calDist)
 
 configure_file(src/DBoW2.cmake.in
   "${PROJECT_BINARY_DIR}/DBoW2Config.cmake" @ONLY)
